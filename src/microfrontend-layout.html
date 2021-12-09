@@ -19,7 +19,11 @@
 
   <main>
     <route default>
-      <application name="@single-spa/welcome"></application>
+      <div>404 not found!</div>
     </route>
+    <route path="/" exact>
+      <div style="margin-top: 80px">Home page placeholder</div>
+    </route>
+    <application name="@mtb/navbar"></application>
   </main>
 </single-spa-router>
