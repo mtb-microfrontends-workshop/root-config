@@ -1,6 +1,7 @@
 const { merge } = require("webpack-merge");
 const singleSpaDefaults = require("webpack-config-single-spa-ts");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = (webpackConfigEnv, argv) => {
   const orgName = "mtb";
@@ -10,6 +11,13 @@ module.exports = (webpackConfigEnv, argv) => {
     webpackConfigEnv,
     argv,
     disableHtmlGeneration: true,
+  });
+
+  const cssRules = defaultConfig.module.rules.filter(
+    (r) => r.test && r.test.exec("file.css")
+  );
+  cssRules.forEach((r) => {
+    r.use[0] = MiniCssExtractPlugin.loader;
   });
 
   return merge(defaultConfig, {
@@ -22,6 +30,9 @@ module.exports = (webpackConfigEnv, argv) => {
           isLocal: webpackConfigEnv && webpackConfigEnv.isLocal,
           orgName,
         },
+      }),
+      new MiniCssExtractPlugin({
+        filename: "styleguide.css",
       }),
     ],
   });
