@@ -48,3 +48,5 @@ jobs:
         with:
           path: .
           destination: mtb.microfrontends.app
+          headers: |-
+            Cache-Control: public, max-age=30
