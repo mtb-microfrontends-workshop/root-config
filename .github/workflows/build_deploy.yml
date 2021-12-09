@@ -48,4 +48,3 @@ jobs:
         with:
           path: /
           destination: mtb.microfrontends.app
-  
