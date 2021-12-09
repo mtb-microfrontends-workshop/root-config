@@ -40,7 +40,7 @@ jobs:
           name: frontend-assets
           path: dist
       - id: auth
-        uses: google-github-actions/auth@v0.4.0
+        uses: google-github-actions/auth@v0.4.1
         with:
           credentials_json: ${{ secrets.GCP_CREDENTIALS }}
       - id: upload-files
