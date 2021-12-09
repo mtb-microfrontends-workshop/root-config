@@ -21,15 +21,14 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm install
-      - run: npm run check-format
-      - run: npm run lint
-      - run: npm run test
+      # - run: npm run test
       - run: npm run build
+      - run: rm dist/navbar/index.html
       - run: find dist
       - uses: actions/upload-artifact@v2
         with:
           name: frontend-assets
-          path: dist
+          path: dist/${{ github.event.repository.name }}
   deploy:
     if: github.ref == 'refs/heads/main' && github.repository_owner == 'mtb-microfrontends-workshop'
     needs: [build]
@@ -47,6 +46,9 @@ jobs:
         uses: google-github-actions/upload-cloud-storage@main
         with:
           path: .
-          destination: mtb.microfrontends.app
+          destination: mtb.microfrontends.app/apps/${{ github.event.repository.name }}/${{ github.sha }}
           headers: |-
             cache-control: public, max-age=30
+      - id: update-import-map
+        run: |
+          curl -u ${{ secrets.IMD_USERNAME }}:${{ secrets.IMD_PASSWORD }} -d '{"service": "@mtb/${{ github.event.repository.name }}", "url": "https://mtb.microfrontends.app/apps/${{ github.event.repository.name }}/${{ github.sha }}/main.js"}' -X PATCH ${{ secrets.IMD_ORIGIN }}/services?env=mtb -H "Accept: application/json" -H "Content-Type: application/json" --fail
